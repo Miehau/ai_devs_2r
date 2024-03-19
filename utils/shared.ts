@@ -1,5 +1,4 @@
 import axios from 'axios';
-import fs from 'fs';
 import * as config from './config.json';
 
 var token = "";
@@ -19,7 +18,6 @@ async function authenticate(taskName: string): Promise<string> {
         token = await response.data.token;
         return response.data.token;
     } catch (error) {
-        // Handle any errors that occur during the API call
         console.error('Error fetching token:', error);
         throw error;
     }
