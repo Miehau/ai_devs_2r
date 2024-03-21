@@ -44,7 +44,7 @@ export async function getTask(taskName: string): Promise<any> {
     }
 }
 
-export async function answer(answer: string): Promise<any> {
+export async function answer(answer: any): Promise<any> {
     try {
         console.log("Sending an answer...")
         const response = await axios.post(`${config.url}/answer/${token}`,
