@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as config from './config.json';
 
-var token = "";
+export var token = "";
 
 async function authenticate(taskName: string): Promise<string> {
     try {
