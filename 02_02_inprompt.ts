@@ -1,49 +1,38 @@
 import * as fs from "fs";
-import { token, answer, getTask } from "./utils/shared";
-import { ChatPromptTemplate } from "langchain/prompts";
+import { answer, getTask } from "./utils/shared";
 import { HumanMessage, SystemMessage } from "langchain/schema";
-import { ChatOpenAI, OpenAIChatInput } from "@langchain/openai"
-import {TextLoader} from "langchain/document_loaders/fs/text";
+import { ChatOpenAI } from "@langchain/openai"
 import { Document } from "langchain/document";
 import * as config from "./utils/config.json";
-import * as dd from "./02_02_docs.json";
-import OpenAI from "openai";
-import axios from "axios";
-
-const documents = dd.default
-
-console.log(documents.map((doc:any) => doc.metadata.source).join('\n'))
 
 const taskData = await getTask('inprompt')
 
-
-
 const model = new ChatOpenAI({ maxConcurrency: 5, openAIApiKey : config.openApiKey })
 
-// const documents = taskData.input.map((sentence: string) => {
-//     return new Document({
-//         pageContent: sentence
-//     })
-// });
+const documents = taskData.input.map((sentence: string) => {
+    return new Document({
+        pageContent: sentence
+    })
+});
 
-// const informationPromiseDictionary = []
+const informationPromiseDictionary = []
 
-// for (const doc of documents) {
-//     informationPromiseDictionary.push(
-//         model.invoke([
-//             new SystemMessage(`For given input, return only name of person it relates to. Return the name and nothing else.`),
-//             new HumanMessage(`Document: ${doc.pageContent}`)
-//         ])
-//     )
-// }
+for (const doc of documents) {
+    informationPromiseDictionary.push(
+        model.invoke([
+            new SystemMessage(`For given input, return only name of person it relates to. Return the name and nothing else.`),
+            new HumanMessage(`Document: ${doc.pageContent}`)
+        ])
+    )
+}
 
-// const descriptions = await Promise.all(informationPromiseDictionary)
+const descriptions = await Promise.all(informationPromiseDictionary)
 
-// descriptions.forEach((description, index) => {
-//     documents[index].metadata.source = description.content
-// })
+descriptions.forEach((description, index) => {
+    documents[index].metadata.source = description.content
+})
 
-// fs.writeFileSync("02_02_docs.json", JSON.stringify(documents, null, 2))
+fs.writeFileSync("02_02_docs.json", JSON.stringify(documents, null, 2))
 
 
 

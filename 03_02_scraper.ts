@@ -1,7 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { getTask, answer } from "./utils/shared";
 import * as config from "./utils/config.json"
-
 import axios from "axios";
 import { HumanMessage, SystemMessage } from "langchain/schema";
 

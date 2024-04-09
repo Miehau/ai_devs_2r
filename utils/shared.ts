@@ -28,12 +28,12 @@ export async function getTask(taskName: string): Promise<any> {
     await authenticate(taskName)
     try {
         console.log("Fetching task...")
-        const response = await axios.get(`${config.url}/task/${token}`, 
-        {
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        });
+        const response = await axios.get(`${config.url}/task/${token}`,
+            {
+                headers: {
+                    'Accept-Encoding': 'gzip'
+                }
+            });
         console.log("Fetching task returned following data:");
         console.log(response.data);
 
@@ -45,19 +45,21 @@ export async function getTask(taskName: string): Promise<any> {
 }
 
 export async function answer(answer: any): Promise<any> {
-    try {
-        console.log("Sending an answer...")
-        const response = await axios.post(`${config.url}/answer/${token}`,
-         { "answer":  answer }, {
-            headers: {
-                'Accept-Encoding': 'gzip'
-            }
-        });
+    console.log("Sending an answer...")
+    const response = await axios.post(`${config.url}/answer/${token}`,
+        { "answer": answer }, {
+        headers: {
+            'Accept-Encoding': 'gzip'
+        }
+    }).catch(error => {
+        console.error('Error while answering:', error);
+        Promise.reject(error)
+        throw error;
+    })
+    .then(response => {
         console.log("Sending an answer returned following data:")
         console.log(response.data)
-        return await response.data;
-    } catch (error) {
-        console.error('Error calling external API:', error.response.data);
-        throw error;
-    }
+        return response.data
+    })
+
 }

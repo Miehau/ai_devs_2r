@@ -1,9 +1,4 @@
-import { OpenAIEmbeddings } from "@langchain/openai";
 import { getTask, answer } from "./utils/shared";
-import * as config from "./utils/config.json"
-import OpenAI from "openai";
-import fs from "fs";
-
 
 const taskData = await getTask('rodo')
 
